@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Web Saya</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #203b49;
+      --muted: #667f87;
+      --paper: #edf6f8;
+      --line: #d8e6e5;
+      --accent: #398e9d;
+      --accent-dark: #2b7481;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      color: var(--ink);
+      background-color: var(--paper);
+      background-image: radial-gradient(#c2d9d8 0.8px, transparent 0.8px), linear-gradient(135deg, #edf6fb, #edf7f0);
+      background-size: 18px 18px, auto;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .login-box {
+      position: relative;
+      width: min(100%, 430px);
+      padding: 40px;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid rgba(32, 52, 47, 0.1);
+      border-radius: 8px;
+      box-shadow: 0 24px 70px rgba(32, 52, 47, 0.13);
+    }
+
+    .login-box::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--accent);
+      content: '';
+    }
+
+    .login-heading {
+      margin-bottom: 28px;
+    }
+
+    .login-heading h2 {
+      margin-bottom: 8px;
+      color: var(--ink);
+      font-size: 30px;
+      font-weight: 650;
+      line-height: 1.2;
+    }
+
+    .heading-copy {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .input-group {
+      margin-bottom: 18px;
+    }
+
+    .role-picker {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .role-option {
+      position: relative;
+    }
+
+    .role-option input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    .role-option span {
+      display: grid;
+      min-height: 48px;
+      place-items: center;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+    }
+
+    .role-option input:checked + span {
+      border-color: var(--accent);
+      background: #e9f5f4;
+      color: var(--accent-dark);
+    }
+
+    .role-option input:focus-visible + span {
+      outline: 3px solid rgba(57, 142, 157, 0.3);
+      outline-offset: 2px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .input-group input {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: #fcfdfb;
+      color: var(--ink);
+      font-size: 15px;
+      transition: border-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .input-group input::placeholder {
+      color: #9aa7a0;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(57, 142, 157, 0.14);
+    }
+
+    .btn-login {
+      width: 100%;
+      min-height: 49px;
+      margin-top: 4px;
+      padding: 12px 16px;
+      border-radius: 5px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 160ms ease, transform 160ms ease;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-1px);
+      background: var(--accent-dark);
+    }
+
+    .btn-login:focus-visible,
+    .logout-button:focus-visible {
+      outline: 3px solid rgba(57, 142, 157, 0.45);
+      outline-offset: 3px;
+    }
+
+    .demo-note {
+      text-align: center;
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid #edf0ed;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .demo-note strong {
+      display: block;
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .demo-account + .demo-account {
+      margin-top: 12px;
+    }
+
+    .login-message {
+      min-height: 20px;
+      margin-top: 12px;
+      color: #a13e3e;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .dashboard {
+      width: min(100%, 1120px);
+      margin: auto;
+    }
+
+    .dashboard-header,
+    .section-heading,
+    .dashboard-intro,
+    .student-heading,
+    .parent-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .dashboard-header {
+      margin-bottom: 38px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(32, 59, 73, 0.16);
+    }
+
+    .home-brand {
+      color: var(--ink);
+      font-size: 17px;
+      font-weight: 750;
+      letter-spacing: 1px;
+    }
+
+    .account-tools {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .account-email {
+      color: var(--muted);
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .logout-button,
+    .secondary-button {
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid #bfd5d5;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.8);
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .dashboard-intro {
+      align-items: flex-end;
+      margin-bottom: 26px;
+    }
+
+    .home-eyebrow {
+      margin-bottom: 8px;
+      color: var(--accent-dark);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .dashboard h1 {
+      margin-bottom: 8px;
+      font-size: 32px;
+      line-height: 1.2;
+    }
+
+    .home-copy,
+    .section-copy {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .period-picker {
+      display: inline-flex;
+      gap: 3px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .period-picker button {
+      min-height: 34px;
+      padding: 7px 12px;
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .period-picker button[aria-pressed="true"] {
+      background: var(--accent);
+      color: white;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      padding: 22px 0 28px;
+      border-top: 1px solid rgba(32, 59, 73, 0.13);
+      border-bottom: 1px solid rgba(32, 59, 73, 0.13);
+    }
+
+    .stat-item {
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      text-align: center;
+    }
+
+    .stat-ring {
+      --ring-value: 0%;
+      --ring-color: var(--accent);
+      display: grid;
+      width: 112px;
+      aspect-ratio: 1;
+      place-items: center;
+      border-radius: 50%;
+      background: conic-gradient(var(--ring-color) var(--ring-value), #e0e9e7 0);
+    }
+
+    .stat-ring::before {
+      grid-area: 1 / 1;
+      width: 84px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: #f7fbf9;
+      content: '';
+    }
+
+    .stat-ring strong {
+      z-index: 1;
+      grid-area: 1 / 1;
+      color: var(--ink);
+      font-size: 20px;
+    }
+
+    .stat-label {
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .stat-detail {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .management-section,
+    .parent-section {
+      margin-top: 30px;
+    }
+
+    .section-heading {
+      margin-bottom: 16px;
+    }
+
+    .section-heading h2,
+    .parent-heading h2 {
+      margin-bottom: 5px;
+      font-size: 20px;
+    }
+
+    .record-date,
+    .student-form input,
+    .parent-select {
+      min-height: 42px;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .student-form,
+    .assessment-form {
+      display: grid;
+      gap: 10px;
+      margin: 0 0 18px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .student-form {
+      grid-template-columns: 1.2fr 0.7fr 1fr auto;
+    }
+
+    .assessment-form {
+      grid-template-columns: 1fr 0.8fr auto;
+    }
+
+    .student-form input,
+    .assessment-form input,
+    .assessment-form select {
+      width: 100%;
+      min-width: 0;
+      min-height: 42px;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .student-form input:focus,
+    .assessment-form input:focus,
+    .assessment-form select:focus,
+    .record-date:focus,
+    .parent-select:focus,
+    .record-table input:focus,
+    .record-table select:focus {
+      outline: 2px solid rgba(57, 142, 157, 0.3);
+      outline-offset: 1px;
+    }
+
+    .form-message {
+      grid-column: 1 / -1;
+      min-height: 18px;
+      color: #a13e3e;
+      font-size: 13px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .record-table {
+      width: max-content;
+      min-width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .record-table th,
+    .record-table td {
+      padding: 13px 12px;
+      border-bottom: 1px solid #e5eeeb;
+      vertical-align: middle;
+    }
+
+    .record-table th {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .record-table td {
+      font-size: 14px;
+    }
+
+    .student-name {
+      color: var(--ink);
+      font-weight: 650;
+    }
+
+    .student-select-button {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .student-select-button:hover,
+    .student-select-button.is-selected {
+      color: var(--accent-dark);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .student-select-button:focus-visible {
+      outline: 2px solid rgba(57, 142, 157, 0.45);
+      outline-offset: 3px;
+    }
+
+    .student-class {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .record-table input[type="number"],
+    .record-table select {
+      min-height: 38px;
+      max-width: 132px;
+      padding: 7px 9px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .score-input {
+      width: 82px;
+    }
+
+    .gradebook-table th:first-child,
+    .gradebook-table td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      min-width: 170px;
+      background: #f7fbf9;
+    }
+
+    .grade-summary {
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .grade-total {
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .weight-note {
+      margin: -7px 0 16px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .attendance-section {
+      margin-top: 34px;
+    }
+
+    .behavior-picker {
+      display: inline-flex;
+      gap: 5px;
+    }
+
+    .behavior-picker button {
+      min-width: 48px;
+      height: 34px;
+      padding: 0 6px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .behavior-picker button[data-value="true"].is-selected {
+      border-color: #60a57b;
+      background: #e5f3e8;
+      color: #287145;
+    }
+
+    .behavior-picker button[data-value="false"].is-selected {
+      border-color: #c98178;
+      background: #fae9e6;
+      color: #a2463c;
+    }
+
+    .parent-heading {
+      align-items: flex-end;
+      margin-bottom: 18px;
+    }
+
+    .parent-student-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .parent-student-card strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 18px;
+    }
+
+    .history-list {
+      margin-top: 20px;
+    }
+
+    .history-row {
+      display: grid;
+      grid-template-columns: 1.2fr repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #e5eeeb;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .history-row strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .empty-state {
+      padding: 22px 12px;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .dashboard button:focus-visible {
+      outline: 3px solid rgba(57, 142, 157, 0.38);
+      outline-offset: 2px;
+    }
+
+    @media (max-width: 760px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        row-gap: 24px;
+      }
+
+      .student-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .student-form .secondary-button,
+      .assessment-form .secondary-button {
+        grid-column: 1 / -1;
+      }
+
+      .assessment-form {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 16px;
+      }
+
+      .login-box {
+        padding: 32px 24px;
+      }
+
+      .dashboard-header {
+        margin-bottom: 28px;
+      }
+
+      .account-tools {
+        gap: 8px;
+      }
+
+      .account-email {
+        display: none;
+      }
+
+      .dashboard-intro,
+      .section-heading,
+      .parent-heading {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .dashboard h1 {
+        font-size: 28px;
+      }
+
+      .stats-grid {
+        gap: 22px 8px;
+      }
+
+      .stat-ring {
+        width: 96px;
+      }
+
+      .stat-ring::before {
+        width: 72px;
+      }
+
+      .stat-ring strong {
+        font-size: 18px;
+      }
+
+      .student-form {
+        grid-template-columns: 1fr;
+      }
+
+      .student-form .secondary-button,
+      .assessment-form .secondary-button {
+        grid-column: auto;
+      }
+
+      .parent-student-card {
+        grid-template-columns: 1fr;
+      }
+
+      .history-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="login-box" id="login-page">
+    <div class="login-heading">
+      <h2>Masuk ke KPM</h2>
+      <p class="heading-copy">Pilih peran Anda untuk melanjutkan.</p>
+    </div>
+    <form onsubmit="handleLogin(event)">
+      <div class="role-picker" role="radiogroup" aria-label="Pilih peran">
+        <label class="role-option">
+          <input type="radio" name="role" value="guru" checked>
+          <span>Guru</span>
+        </label>
+        <label class="role-option">
+          <input type="radio" name="role" value="wali-murid">
+          <span>Wali Murid</span>
+        </label>
+      </div>
+
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="email@guru.kpm.id" autocomplete="username" required>
+      </div>
+
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Masukkan password" autocomplete="current-password" required>
+      </div>
+
+      <button type="submit" class="btn-login">Masuk ke akun</button>
+      <p class="login-message" id="login-message" role="status" aria-live="polite"></p>
+    </form>
+    <div class="demo-note">
+      Akun demo
+      <p class="demo-account">Guru<strong>guru@kpm.id</strong>Password: <strong>guru12345</strong></p>
+      <p class="demo-account">Wali murid<strong>wali@kpm.id</strong>Password: <strong>wali12345</strong></p>
+    </div>
+  </main>
+
+  <main class="dashboard" id="home-page" hidden>
+    <header class="dashboard-header">
+      <span class="home-brand">KPM</span>
+      <div class="account-tools">
+        <span class="account-email" id="account-email"></span>
+        <button class="logout-button" type="button" onclick="handleLogout()">Keluar</button>
+      </div>
+    </header>
+
+    <section id="teacher-dashboard" hidden aria-labelledby="teacher-title">
+      <div class="dashboard-intro">
+        <div>
+          <p class="home-eyebrow">DASHBOARD GURU</p>
+          <h1 id="teacher-title">Ringkasan kelas</h1>
+          <p class="home-copy">Data contoh tersimpan di browser. Pantau perkembangan dan catat aktivitas murid.</p>
+        </div>
+        <div class="period-picker" role="group" aria-label="Periode statistik">
+          <button type="button" data-period="day" aria-pressed="true">Harian</button>
+          <button type="button" data-period="week" aria-pressed="false">7 hari</button>
+          <button type="button" data-period="month" aria-pressed="false">Bulanan</button>
+        </div>
+      </div>
+
+      <p class="section-copy" id="teacher-stats-scope" aria-live="polite">Rata-rata seluruh kelas</p>
+      <div class="stats-grid" aria-label="Statistik kelas">
+        <article class="stat-item">
+          <div class="stat-ring" data-stat-ring="score"><strong data-stat-value="score">--</strong></div>
+          <span class="stat-label">Rata-rata nilai</span>
+          <span class="stat-detail" data-stat-detail="score">Belum ada nilai</span>
+        </article>
+        <article class="stat-item">
+          <div class="stat-ring" data-stat-ring="attendance"><strong data-stat-value="attendance">--</strong></div>
+          <span class="stat-label">Kehadiran</span>
+          <span class="stat-detail" data-stat-detail="attendance">Belum ada absensi</span>
+        </article>
+        <article class="stat-item">
+          <div class="stat-ring" data-stat-ring="activity"><strong data-stat-value="activity">--</strong></div>
+          <span class="stat-label">Keaktifan</span>
+          <span class="stat-detail" data-stat-detail="activity">Belum ada catatan</span>
+        </article>
+        <article class="stat-item">
+          <div class="stat-ring" data-stat-ring="behavior"><strong data-stat-value="behavior">--</strong></div>
+          <span class="stat-label">Sikap baik</span>
+          <span class="stat-detail" data-stat-detail="behavior">Belum ada tanda</span>
+        </article>
+      </div>
+
+      <section class="management-section" aria-labelledby="students-title">
+        <div class="section-heading">
+          <div>
+            <h2 id="students-title">Buku nilai kelas</h2>
+            <p class="section-copy">Masukkan beberapa nilai; rata-rata dan nilai akhir dihitung otomatis.</p>
+          </div>
+          <div class="student-heading">
+            <label class="section-copy" for="record-date">Tanggal catatan</label>
+            <input class="record-date" id="record-date" type="date">
+            <button class="secondary-button" id="toggle-student-form" type="button" aria-expanded="false">+ Tambah murid</button>
+          </div>
+        </div>
+
+        <form class="student-form" id="student-form" hidden onsubmit="addStudent(event)">
+          <input id="new-student-name" type="text" placeholder="Nama murid" aria-label="Nama murid" required maxlength="70">
+          <input id="new-student-class" type="text" placeholder="Kelas" aria-label="Kelas" required maxlength="20">
+          <input id="new-student-guardian" type="email" placeholder="Email wali murid (opsional)" aria-label="Email wali murid">
+          <button class="secondary-button" type="submit">Simpan murid</button>
+          <p class="form-message" id="student-form-message" role="status" aria-live="polite"></p>
+        </form>
+
+        <form class="assessment-form" id="assessment-form" onsubmit="addAssessment(event)">
+          <input id="new-assessment-name" type="text" placeholder="Nama penilaian, misalnya Tugas 1" aria-label="Nama penilaian" required maxlength="50">
+          <select id="new-assessment-type" aria-label="Jenis penilaian">
+            <option value="regular">Nilai selain ujian akhir (bobot 70%)</option>
+            <option value="final">Ujian akhir (bobot 20%)</option>
+          </select>
+          <button class="secondary-button" type="submit">+ Tambah kolom nilai</button>
+          <p class="form-message" id="assessment-form-message" role="status" aria-live="polite"></p>
+        </form>
+
+        <p class="weight-note">Nilai akhir = rata-rata nilai lain × 70% + rata-rata ujian akhir × 20% + keaktifan × 5% + rata-rata sikap × 5%. Satu tanda sikap per murid per tanggal: ceklis 100, silang 0.</p>
+        <div class="table-wrap">
+          <table class="record-table gradebook-table">
+            <thead id="gradebook-head"></thead>
+            <tbody id="student-rows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="attendance-section" aria-labelledby="attendance-title">
+        <div class="section-heading">
+          <div>
+            <h2 id="attendance-title">Absensi harian</h2>
+            <p class="section-copy">Pilih status kehadiran setiap murid untuk tanggal di atas.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="record-table">
+            <thead>
+              <tr><th scope="col">Nama murid</th><th scope="col">Kehadiran</th></tr>
+            </thead>
+            <tbody id="attendance-rows"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <section class="parent-section" id="parent-dashboard" hidden aria-labelledby="parent-title">
+      <div class="parent-heading">
+        <div>
+          <p class="home-eyebrow">DASHBOARD WALI MURID</p>
+          <h1 id="parent-title">Perkembangan anak</h1>
+          <p class="home-copy">Data contoh tersimpan di browser. Lihat perkembangan belajar dan kehadiran anak.</p>
+        </div>
+        <div class="period-picker" role="group" aria-label="Periode statistik">
+          <button type="button" data-period="day" aria-pressed="true">Harian</button>
+          <button type="button" data-period="week" aria-pressed="false">7 hari</button>
+          <button type="button" data-period="month" aria-pressed="false">Bulanan</button>
+        </div>
+      </div>
+      <div id="parent-content"></div>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = 'kpm-classroom-records-v1';
+    const today = new Date();
+    let selectedDate = toDateKey(today);
+    let selectedPeriod = 'day';
+    let currentUser = null;
+    let selectedTeacherStudentId = null;
+    let selectedParentStudentId = '';
+
+    function toDateKey(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function createDemoAssessments() {
+      const taskDate = new Date();
+      taskDate.setDate(taskDate.getDate() - 6);
+      const finalDate = new Date();
+      finalDate.setDate(finalDate.getDate() - 2);
+      return [
+        { id: 'demo-task-1', name: 'Tugas 1', type: 'regular', date: toDateKey(taskDate) },
+        { id: 'demo-quiz-1', name: 'Kuis 1', type: 'regular', date: toDateKey(new Date()) },
+        { id: 'demo-final-1', name: 'Ujian Akhir', type: 'final', date: toDateKey(finalDate) }
+      ];
+    }
+
+    function createDemoStudents() {
+      const students = [
+        { id: 'demo-1', name: 'Nisa Putri', className: '4A', guardianEmail: 'wali@kpm.id', records: {}, grades: { 'demo-task-1': 82, 'demo-quiz-1': 88, 'demo-final-1': 90 }, activityScore: 90, conductGood: true },
+        { id: 'demo-2', name: 'Rafi Pratama', className: '4A', guardianEmail: '', records: {}, grades: { 'demo-task-1': 75, 'demo-quiz-1': 80, 'demo-final-1': 78 }, activityScore: 80, conductGood: true },
+        { id: 'demo-3', name: 'Alya Safitri', className: '4B', guardianEmail: '', records: {}, grades: { 'demo-task-1': 91, 'demo-quiz-1': 86, 'demo-final-1': 92 }, activityScore: 95, conductGood: false }
+      ];
+
+      for (let offset = 29; offset >= 0; offset -= 1) {
+        const date = new Date();
+        date.setDate(date.getDate() - offset);
+        if (date.getDay() === 0 || date.getDay() === 6) continue;
+        const dateKey = toDateKey(date);
+
+        students.forEach((student, index) => {
+          const variation = (offset * 7 + index * 13) % 18;
+          student.records[dateKey] = {
+            score: Math.min(100, 76 + variation),
+            attendance: (offset + index) % 11 === 0 ? 'Izin' : (offset + index) % 13 === 0 ? 'Terlambat' : 'Hadir',
+            active: (offset + index) % 5 !== 0,
+            good: (offset + index) % 6 !== 0
+          };
+        });
+      }
+
+      return students;
+    }
+
+    function loadClassroom() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (saved && Array.isArray(saved.students) && Array.isArray(saved.assessments)) {
+          return { students: saved.students, assessments: saved.assessments };
+        }
+        if (Array.isArray(saved)) {
+          const assessments = [{ id: 'legacy-regular', name: 'Rata-rata nilai sebelumnya', type: 'regular', date: toDateKey(new Date()) }];
+          const migratedStudents = saved.map((student) => {
+            const oldRecords = Object.values(student.records || {});
+            const oldScores = oldRecords.map((record) => Number(record.score)).filter((score) => Number.isFinite(score) && score >= 0 && score <= 100);
+            const oldActivity = oldRecords.filter((record) => typeof record.active === 'boolean');
+            const oldConduct = oldRecords.filter((record) => typeof record.good === 'boolean');
+            student.grades = student.grades || {};
+            if (oldScores.length) student.grades['legacy-regular'] = oldScores.reduce((sum, score) => sum + score, 0) / oldScores.length;
+            if (typeof student.activityScore !== 'number' && oldActivity.length) {
+              student.activityScore = oldActivity.filter((record) => record.active).length / oldActivity.length * 100;
+            }
+            if (typeof student.conductGood !== 'boolean' && oldConduct.length) {
+              student.conductGood = oldConduct.filter((record) => record.good).length >= oldConduct.length / 2;
+            }
+            return student;
+          });
+          return { students: migratedStudents, assessments };
+        }
+      } catch (error) {
+        return { students: createDemoStudents(), assessments: createDemoAssessments() };
+      }
+      return { students: createDemoStudents(), assessments: createDemoAssessments() };
+    }
+
+    const classroom = loadClassroom();
+    let students = classroom.students;
+    let assessments = classroom.assessments;
+
+    function saveStudents() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ students, assessments }));
+      } catch (error) {
+        console.warn('Data tidak dapat disimpan di browser ini.', error);
+      }
+    }
+
+    function getPeriodDates() {
+      const anchor = new Date(`${selectedDate}T12:00:00`);
+      const start = new Date(anchor);
+      const end = new Date(anchor);
+
+      if (selectedPeriod === 'week') start.setDate(start.getDate() - 6);
+      if (selectedPeriod === 'month') {
+        start.setDate(1);
+        end.setMonth(end.getMonth() + 1, 0);
+      }
+
+      const dates = [];
+      for (const date = new Date(start); date <= end; date.setDate(date.getDate() + 1)) {
+        dates.push(toDateKey(date));
+      }
+      return dates;
+    }
+
+    function getRecord(student, date, create = false) {
+      if (!student.records) student.records = {};
+      if (!student.records[date] && create) {
+        student.records[date] = { score: null, attendance: '', active: null, good: null };
+      }
+      return student.records[date];
+    }
+
+    function collectRecords(studentList) {
+      const dates = new Set(getPeriodDates());
+      return studentList.flatMap((student) => Object.entries(student.records || {})
+        .filter(([date]) => dates.has(date))
+        .map(([date, record]) => ({ student, date, record })));
+    }
+
+    function getConductSummary(student, dateFilter = null) {
+      const marks = Object.entries(student.records || {}).flatMap(([date, record]) => {
+        if (dateFilter && !dateFilter.has(date)) return [];
+        if (Array.isArray(record.conductMarks)) {
+          return record.conductMarks.filter((mark) => typeof mark.good === 'boolean').map((mark) => mark.good);
+        }
+        return typeof record.good === 'boolean' ? [record.good] : [];
+      });
+      if (marks.length) {
+        const goodCount = marks.filter(Boolean).length;
+        return { score: goodCount / marks.length * 100, goodCount, crossCount: marks.length - goodCount, count: marks.length };
+      }
+      if (!dateFilter && typeof student.conductGood === 'boolean') {
+        return { score: student.conductGood ? 100 : 0, goodCount: student.conductGood ? 1 : 0, crossCount: student.conductGood ? 0 : 1, count: 1 };
+      }
+      return { score: null, goodCount: 0, crossCount: 0, count: 0 };
+    }
+
+    function getGradeComponents(student, dateFilter = null) {
+      const grades = student.grades || {};
+      const selected = assessments.filter((assessment) => !dateFilter || dateFilter.has(assessment.date));
+      const averageFor = (type) => {
+        const values = selected
+          .filter((assessment) => assessment.type === type)
+          .map((assessment) => Number(grades[assessment.id]))
+          .filter((score) => Number.isFinite(score) && score >= 0 && score <= 100);
+        return values.length ? values.reduce((sum, score) => sum + score, 0) / values.length : null;
+      };
+      const regularAverage = averageFor('regular');
+      const finalAverage = averageFor('final');
+      const activityScore = Number(student.activityScore);
+      const validActivity = Number.isFinite(activityScore) && activityScore >= 0 && activityScore <= 100;
+      const conductScore = getConductSummary(student, dateFilter).score;
+      const complete = regularAverage !== null && finalAverage !== null && validActivity && conductScore !== null;
+
+      return {
+        regularAverage,
+        finalAverage,
+        activityScore: validActivity ? activityScore : null,
+        conductScore,
+        regularContribution: regularAverage === null ? null : regularAverage * 0.7,
+        finalContribution: finalAverage === null ? null : finalAverage * 0.2,
+        activityContribution: validActivity ? activityScore * 0.05 : null,
+        conductContribution: conductScore === null ? null : conductScore * 0.05,
+        total: complete ? regularAverage * 0.7 + finalAverage * 0.2 + activityScore * 0.05 + conductScore * 0.05 : null
+      };
+    }
+
+    function calculateStats(studentList) {
+      const records = collectRecords(studentList).map(({ record }) => record);
+      const dates = new Set(getPeriodDates());
+      const periodAssessments = assessments.filter((assessment) => dates.has(assessment.date));
+      const scores = studentList.flatMap((student) => periodAssessments
+        .map((assessment) => Number(student.grades?.[assessment.id]))
+        .filter((score) => Number.isFinite(score) && score >= 0 && score <= 100));
+      const attendance = records.filter((record) => ['Hadir', 'Terlambat', 'Izin', 'Sakit', 'Alpa'].includes(record.attendance));
+      const active = studentList.map((student) => Number(student.activityScore)).filter((score) => Number.isFinite(score) && score >= 0 && score <= 100);
+      const conduct = studentList.map((student) => getConductSummary(student, dates));
+      const goodMarks = conduct.reduce((sum, summary) => sum + summary.goodCount, 0);
+      const crossMarks = conduct.reduce((sum, summary) => sum + summary.crossCount, 0);
+      const markedCount = goodMarks + crossMarks;
+
+      return [
+        { key: 'score', value: scores.length ? Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length) : null, count: scores.length },
+        { key: 'attendance', value: attendance.length ? Math.round(attendance.filter((item) => ['Hadir', 'Terlambat'].includes(item.attendance)).length / attendance.length * 100) : null, count: attendance.length },
+        { key: 'activity', value: active.length ? Math.round(active.reduce((sum, score) => sum + score, 0) / active.length) : null, count: active.length },
+        { key: 'behavior', value: markedCount ? Math.round(goodMarks / markedCount * 100) : null, count: markedCount, goodCount: goodMarks, crossCount: crossMarks }
+      ];
+    }
+
+    function updateStats(root, studentList) {
+      calculateStats(studentList).forEach((stat) => {
+        const ring = root.querySelector(`[data-stat-ring="${stat.key}"]`);
+        const value = root.querySelector(`[data-stat-value="${stat.key}"]`);
+        const detail = root.querySelector(`[data-stat-detail="${stat.key}"]`);
+        value.textContent = stat.value === null ? '--' : `${stat.value}${stat.key === 'score' ? '' : '%'}`;
+        ring.style.setProperty('--ring-value', `${stat.value || 0}%`);
+        detail.textContent = stat.key === 'behavior'
+          ? `${stat.goodCount} ceklis · ${stat.crossCount} silang`
+          : stat.count ? `${stat.count} ${stat.key === 'score' ? 'nilai' : 'catatan'}` : 'Belum ada catatan';
+      });
+    }
+
+    function appendSelectableStudentName(cell, student) {
+      const name = document.createElement('button');
+      const isSelected = student.id === selectedTeacherStudentId;
+      name.type = 'button';
+      name.className = `student-name student-select-button${isSelected ? ' is-selected' : ''}`;
+      name.textContent = student.name;
+      name.setAttribute('aria-label', `Statistik murid ${student.name}`);
+      name.setAttribute('aria-pressed', String(isSelected));
+      name.dataset.studentSelect = student.id;
+      const className = document.createElement('span');
+      className.className = 'student-class';
+      className.textContent = `Kelas ${student.className}`;
+      cell.append(name, className);
+    }
+
+    function updateTeacherStats() {
+      const selectedStudent = students.find((student) => student.id === selectedTeacherStudentId);
+      if (!selectedStudent) selectedTeacherStudentId = null;
+      document.getElementById('teacher-stats-scope').textContent = selectedStudent
+        ? `Statistik ${selectedStudent.name}`
+        : 'Rata-rata seluruh kelas';
+      updateStats(document.getElementById('teacher-dashboard'), selectedStudent ? [selectedStudent] : students);
+    }
+
+    function makeParentStats(student) {
+      const grid = document.createElement('div');
+      grid.className = 'stats-grid';
+      grid.setAttribute('aria-label', 'Statistik perkembangan anak');
+      const labels = { score: 'Rata-rata nilai', attendance: 'Kehadiran', activity: 'Keaktifan', behavior: 'Sikap baik' };
+
+      calculateStats([student]).forEach((stat) => {
+        const item = document.createElement('article');
+        item.className = 'stat-item';
+        const ring = document.createElement('div');
+        ring.className = 'stat-ring';
+        ring.style.setProperty('--ring-value', `${stat.value || 0}%`);
+        const value = document.createElement('strong');
+        value.textContent = stat.value === null ? '--' : `${stat.value}${stat.key === 'score' ? '' : '%'}`;
+        ring.append(value);
+        const label = document.createElement('span');
+        label.className = 'stat-label';
+        label.textContent = labels[stat.key];
+        const detail = document.createElement('span');
+        detail.className = 'stat-detail';
+        detail.textContent = stat.key === 'behavior'
+          ? `${stat.goodCount} ceklis · ${stat.crossCount} silang`
+          : stat.count ? `${stat.count} ${stat.key === 'score' ? 'nilai' : 'catatan'}` : 'Belum ada catatan';
+        item.append(ring, label, detail);
+        grid.append(item);
+      });
+
+      return grid;
+    }
+
+    function renderTeacherRows() {
+      const body = document.getElementById('student-rows');
+      const head = document.getElementById('gradebook-head');
+      const columns = [
+        ['regularAverage', 'Rata-rata nilai lain × 70%'],
+        ['finalAverage', 'Rata-rata ujian akhir × 20%'],
+        ['activity', 'Keaktifan × 5%'],
+        ['conduct', 'Sikap × 5%'],
+        ['total', 'Nilai akhir']
+      ];
+      const headerRow = document.createElement('tr');
+      const studentHeader = document.createElement('th');
+      studentHeader.scope = 'col';
+      studentHeader.textContent = 'Nama murid';
+      headerRow.append(studentHeader);
+
+      assessments.forEach((assessment) => {
+        const header = document.createElement('th');
+        header.scope = 'col';
+        header.textContent = assessment.name;
+        header.title = `${assessment.type === 'final' ? 'Ujian akhir' : 'Nilai lainnya'} · ${assessment.date}`;
+        headerRow.append(header);
+      });
+
+      columns.forEach(([, label]) => {
+        const header = document.createElement('th');
+        header.scope = 'col';
+        header.textContent = label;
+        headerRow.append(header);
+      });
+      head.replaceChildren(headerRow);
+      body.replaceChildren();
+
+      if (!students.length) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.colSpan = assessments.length + columns.length + 1;
+        cell.className = 'empty-state';
+        cell.textContent = 'Belum ada murid. Tambahkan murid untuk mulai mencatat.';
+        row.append(cell);
+        body.append(row);
+        renderAttendanceRows();
+        return;
+      }
+
+      students.forEach((student) => {
+        student.grades = student.grades || {};
+        const row = document.createElement('tr');
+        const nameCell = document.createElement('td');
+        appendSelectableStudentName(nameCell, student);
+        row.append(nameCell);
+
+        assessments.forEach((assessment) => {
+          const cell = document.createElement('td');
+          const input = document.createElement('input');
+          input.type = 'number';
+          input.className = 'score-input';
+          input.min = '0';
+          input.max = '100';
+          input.step = 'any';
+          input.placeholder = '--';
+          input.value = student.grades[assessment.id] ?? '';
+          input.setAttribute('aria-label', `${assessment.name}, nilai ${student.name}`);
+          input.dataset.studentId = student.id;
+          input.dataset.assessmentId = assessment.id;
+          input.dataset.field = 'assessment-score';
+          cell.append(input);
+          row.append(cell);
+        });
+
+        const components = getGradeComponents(student);
+        const regularAverage = document.createElement('td');
+        regularAverage.className = 'grade-summary';
+        regularAverage.dataset.summary = 'regularAverage';
+        regularAverage.textContent = formatGrade(components.regularAverage);
+        const finalAverage = document.createElement('td');
+        finalAverage.className = 'grade-summary';
+        finalAverage.dataset.summary = 'finalAverage';
+        finalAverage.textContent = formatGrade(components.finalAverage);
+        const activityCell = document.createElement('td');
+        const activity = document.createElement('input');
+        activity.type = 'number';
+        activity.className = 'score-input';
+        activity.min = '0';
+        activity.max = '100';
+        activity.step = 'any';
+        activity.placeholder = '--';
+        activity.value = student.activityScore ?? '';
+        activity.setAttribute('aria-label', `Nilai keaktifan ${student.name}`);
+        activity.dataset.studentId = student.id;
+        activity.dataset.field = 'activity-score';
+        activityCell.append(activity);
+
+        const behaviorCell = document.createElement('td');
+        const picker = document.createElement('div');
+        const periodConduct = getConductSummary(student, new Set(getPeriodDates()));
+        const currentRecord = getRecord(student, selectedDate) || { good: null };
+        const todayMarks = Array.isArray(currentRecord.conductMarks) ? currentRecord.conductMarks : [];
+        const lastTodayMark = todayMarks.length ? todayMarks[todayMarks.length - 1].good : currentRecord.good;
+        const conductValue = document.createElement('span');
+        conductValue.className = 'grade-summary';
+        conductValue.textContent = formatGrade(components.conductScore);
+        behaviorCell.append(conductValue);
+        picker.className = 'behavior-picker';
+        picker.setAttribute('role', 'group');
+        picker.setAttribute('aria-label', `Tanda sikap ${student.name}`);
+        [['true', `✓ ${periodConduct.goodCount}`, 'Tandai sikap baik'], ['false', `× ${periodConduct.crossCount}`, 'Beri tanda silang']].forEach(([value, text, label]) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = text;
+          button.title = label;
+          button.setAttribute('aria-label', `${label}: ${student.name}`);
+          button.setAttribute('aria-pressed', String(lastTodayMark === (value === 'true')));
+          button.dataset.value = value;
+          button.dataset.studentId = student.id;
+          button.dataset.field = 'conduct';
+          if (lastTodayMark === (value === 'true')) button.classList.add('is-selected');
+          picker.append(button);
+        });
+        behaviorCell.append(picker);
+
+        const totalCell = document.createElement('td');
+        totalCell.className = 'grade-total';
+        totalCell.dataset.summary = 'total';
+        totalCell.textContent = formatGrade(components.total);
+        row.append(regularAverage, finalAverage, activityCell, behaviorCell, totalCell);
+        body.append(row);
+      });
+
+      renderAttendanceRows();
+    }
+
+    function formatGrade(value) {
+      return value === null ? '--' : value.toFixed(1);
+    }
+
+    function updateGradeSummary(student) {
+      const row = [...document.querySelectorAll('#student-rows tr')]
+        .find((item) => item.querySelector('[data-student-id]')?.dataset.studentId === student.id);
+      if (!row) return;
+      const components = getGradeComponents(student);
+      row.querySelector('[data-summary="regularAverage"]').textContent = formatGrade(components.regularAverage);
+      row.querySelector('[data-summary="finalAverage"]').textContent = formatGrade(components.finalAverage);
+      row.querySelector('[data-summary="total"]').textContent = formatGrade(components.total);
+    }
+
+    function renderAttendanceRows() {
+      const body = document.getElementById('attendance-rows');
+      body.replaceChildren();
+
+      students.forEach((student) => {
+        const record = getRecord(student, selectedDate) || { attendance: '' };
+        const row = document.createElement('tr');
+        const nameCell = document.createElement('td');
+        appendSelectableStudentName(nameCell, student);
+
+        const attendanceCell = document.createElement('td');
+        const attendance = document.createElement('select');
+        attendance.setAttribute('aria-label', `Kehadiran ${student.name}`);
+        attendance.dataset.studentId = student.id;
+        attendance.dataset.field = 'attendance';
+        [['', 'Pilih'], ['Hadir', 'Hadir'], ['Terlambat', 'Terlambat'], ['Izin', 'Izin'], ['Sakit', 'Sakit'], ['Alpa', 'Alpa']]
+          .forEach(([value, label]) => {
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = label;
+            attendance.append(option);
+          });
+        attendance.value = record.attendance || '';
+        attendanceCell.append(attendance);
+        row.append(nameCell, attendanceCell);
+        body.append(row);
+      });
+    }
+
+    function renderParentDashboard() {
+      const content = document.getElementById('parent-content');
+      const linkedStudents = students.filter((student) => student.guardianEmail === currentUser.email);
+      content.replaceChildren();
+
+      if (!linkedStudents.length) {
+        const empty = document.createElement('p');
+        empty.className = 'empty-state';
+        empty.textContent = 'Belum ada data murid yang terhubung dengan akun wali murid ini.';
+        content.append(empty);
+        return;
+      }
+
+      const selectedStudent = linkedStudents.find((student) => student.id === selectedParentStudentId) || linkedStudents[0];
+      selectedParentStudentId = selectedStudent.id;
+      const heading = document.createElement('div');
+      heading.className = 'parent-student-card';
+      const studentInfo = document.createElement('div');
+      const name = document.createElement('strong');
+      name.textContent = selectedStudent.name;
+      const classLabel = document.createElement('span');
+      classLabel.className = 'section-copy';
+      classLabel.textContent = `Kelas ${selectedStudent.className}`;
+      studentInfo.append(name, classLabel);
+      heading.append(studentInfo);
+
+      if (linkedStudents.length > 1) {
+        const select = document.createElement('select');
+        select.className = 'parent-select';
+        select.setAttribute('aria-label', 'Pilih anak');
+        linkedStudents.forEach((student) => {
+          const option = document.createElement('option');
+          option.value = student.id;
+          option.textContent = student.name;
+          select.append(option);
+        });
+        select.value = selectedStudent.id;
+        select.addEventListener('change', () => {
+          selectedParentStudentId = select.value;
+          renderParentDashboard();
+        });
+        heading.append(select);
+      }
+
+      content.append(heading, makeParentStats(selectedStudent));
+      const history = document.createElement('div');
+      history.className = 'history-list';
+      const historyTitle = document.createElement('h2');
+      historyTitle.textContent = 'Catatan perkembangan';
+      historyTitle.style.fontSize = '18px';
+      historyTitle.style.marginBottom = '8px';
+      history.append(historyTitle);
+
+      const periodDates = new Set(getPeriodDates());
+      const entriesByDate = new Map(collectRecords([selectedStudent]).map(({ date, record }) => [date, { date, record, scores: [] }]));
+      assessments.forEach((assessment) => {
+        const score = Number(selectedStudent.grades?.[assessment.id]);
+        if (!periodDates.has(assessment.date) || !Number.isFinite(score)) return;
+        const entry = entriesByDate.get(assessment.date) || { date: assessment.date, record: {}, scores: [] };
+        entry.scores.push(`${assessment.name}: ${formatGrade(score)}`);
+        entriesByDate.set(assessment.date, entry);
+      });
+      const entries = [...entriesByDate.values()]
+        .sort((first, second) => second.date.localeCompare(first.date))
+        .slice(0, selectedPeriod === 'day' ? 1 : 10);
+
+      if (!entries.length) {
+        const empty = document.createElement('p');
+        empty.className = 'empty-state';
+        empty.textContent = 'Belum ada catatan pada periode ini.';
+        history.append(empty);
+      } else {
+        entries.forEach(({ date, record, scores }) => {
+          const row = document.createElement('div');
+          row.className = 'history-row';
+          const dateLabel = document.createElement('strong');
+          dateLabel.textContent = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(`${date}T12:00:00`));
+          const score = document.createElement('span');
+          score.textContent = `Nilai: ${scores.length ? scores.join(', ') : '-'}`;
+          const attendance = document.createElement('span');
+          attendance.textContent = `Absen: ${record.attendance || '-'}`;
+          const activity = document.createElement('span');
+          activity.textContent = `Aktif: ${typeof record.active === 'boolean' ? record.active ? 'Ya' : 'Belum' : '-'}`;
+          const behavior = document.createElement('span');
+          behavior.textContent = `Sikap: ${typeof record.good === 'boolean' ? record.good ? '✓ Baik' : '×' : '-'}`;
+          row.append(dateLabel, score, attendance, activity, behavior);
+          history.append(row);
+        });
+      }
+
+      content.append(history);
+    }
+
+    function renderDashboard() {
+      const isTeacher = currentUser.role === 'guru';
+      document.getElementById('teacher-dashboard').hidden = !isTeacher;
+      document.getElementById('parent-dashboard').hidden = isTeacher;
+      document.getElementById('account-email').textContent = currentUser.email;
+      document.getElementById('record-date').value = selectedDate;
+      document.querySelectorAll('[data-period]').forEach((button) => {
+        button.setAttribute('aria-pressed', String(button.dataset.period === selectedPeriod));
+      });
+
+      if (isTeacher) {
+        updateTeacherStats();
+        renderTeacherRows();
+      } else {
+        renderParentDashboard();
+      }
+    }
+
+    document.querySelectorAll('input[name="role"]').forEach((roleInput) => {
+      roleInput.addEventListener('change', () => {
+        const emailPlaceholder = roleInput.value === 'guru' ? 'email@guru.kpm.id' : 'email@wali.kpm.id';
+        document.getElementById('email').placeholder = emailPlaceholder;
+        document.getElementById('login-message').textContent = '';
+      });
+    });
+
+    document.querySelectorAll('[data-period]').forEach((button) => {
+      button.addEventListener('click', () => {
+        selectedPeriod = button.dataset.period;
+        document.querySelectorAll('[data-period]').forEach((periodButton) => {
+          periodButton.setAttribute('aria-pressed', String(periodButton === button));
+        });
+        if (currentUser) renderDashboard();
+      });
+    });
+
+    document.getElementById('record-date').addEventListener('change', (event) => {
+      selectedDate = event.target.value || toDateKey(new Date());
+      renderDashboard();
+    });
+
+    document.getElementById('toggle-student-form').addEventListener('click', (event) => {
+      const form = document.getElementById('student-form');
+      form.hidden = !form.hidden;
+      event.currentTarget.setAttribute('aria-expanded', String(!form.hidden));
+      if (!form.hidden) document.getElementById('new-student-name').focus();
+    });
+
+    function addAssessment(event) {
+      event.preventDefault();
+      const nameInput = document.getElementById('new-assessment-name');
+      const message = document.getElementById('assessment-form-message');
+      const name = nameInput.value.trim();
+      const type = document.getElementById('new-assessment-type').value;
+
+      if (assessments.some((assessment) => assessment.name.toLowerCase() === name.toLowerCase())) {
+        message.textContent = 'Nama penilaian tersebut sudah digunakan.';
+        return;
+      }
+
+      assessments.push({ id: `assessment-${Date.now()}`, name, type, date: selectedDate });
+      saveStudents();
+      event.currentTarget.reset();
+      message.textContent = '';
+      renderDashboard();
+    }
+
+    document.getElementById('student-rows').addEventListener('input', (event) => {
+      const target = event.target;
+      if (!target.dataset.field) return;
+      const student = students.find((item) => item.id === target.dataset.studentId);
+      if (!student) return;
+      const score = target.value === '' ? null : Number(target.value);
+      if (score !== null && (!Number.isFinite(score) || score < 0 || score > 100)) {
+        target.value = target.dataset.field === 'assessment-score'
+          ? student.grades?.[target.dataset.assessmentId] ?? ''
+          : student.activityScore ?? '';
+        return;
+      }
+
+      if (target.dataset.field === 'assessment-score') {
+        student.grades = student.grades || {};
+        if (score === null) delete student.grades[target.dataset.assessmentId];
+        else student.grades[target.dataset.assessmentId] = score;
+      } else if (target.dataset.field === 'activity-score') {
+        student.activityScore = score;
+      } else {
+        return;
+      }
+
+      saveStudents();
+      updateGradeSummary(student);
+      updateTeacherStats();
+    });
+
+    document.getElementById('attendance-rows').addEventListener('change', (event) => {
+      const target = event.target;
+      if (target.dataset.field !== 'attendance') return;
+      const student = students.find((item) => item.id === target.dataset.studentId);
+      if (!student) return;
+      getRecord(student, selectedDate, true).attendance = target.value;
+      saveStudents();
+      updateTeacherStats();
+    });
+
+    document.getElementById('student-rows').addEventListener('click', (event) => {
+      const selectButton = event.target.closest('button[data-student-select]');
+      if (selectButton) {
+        selectedTeacherStudentId = selectedTeacherStudentId === selectButton.dataset.studentSelect
+          ? null
+          : selectButton.dataset.studentSelect;
+        renderDashboard();
+        return;
+      }
+
+      const button = event.target.closest('button[data-field="conduct"]');
+      if (!button) return;
+      const student = students.find((item) => item.id === button.dataset.studentId);
+      if (!student) return;
+      const record = getRecord(student, selectedDate, true);
+      const selectedValue = button.dataset.value === 'true';
+      record.conductMarks = Array.isArray(record.conductMarks) ? record.conductMarks : [];
+      record.conductMarks.push({ good: selectedValue, time: new Date().toISOString() });
+      record.good = selectedValue;
+      saveStudents();
+      renderTeacherRows();
+      updateTeacherStats();
+    });
+
+    document.getElementById('attendance-rows').addEventListener('click', (event) => {
+      const selectButton = event.target.closest('button[data-student-select]');
+      if (!selectButton) return;
+      selectedTeacherStudentId = selectedTeacherStudentId === selectButton.dataset.studentSelect
+        ? null
+        : selectButton.dataset.studentSelect;
+      renderDashboard();
+    });
+
+    function addStudent(event) {
+      event.preventDefault();
+      const nameInput = document.getElementById('new-student-name');
+      const classInput = document.getElementById('new-student-class');
+      const guardianInput = document.getElementById('new-student-guardian');
+      const message = document.getElementById('student-form-message');
+      const name = nameInput.value.trim();
+      const className = classInput.value.trim();
+      const guardianEmail = guardianInput.value.trim().toLowerCase();
+
+      if (students.some((student) => student.name.toLowerCase() === name.toLowerCase() && student.className.toLowerCase() === className.toLowerCase())) {
+        message.textContent = 'Murid dengan nama dan kelas tersebut sudah terdaftar.';
+        return;
+      }
+
+      students.push({ id: `student-${Date.now()}`, name, className, guardianEmail, records: {}, grades: {}, activityScore: null, conductGood: null });
+      saveStudents();
+      event.currentTarget.reset();
+      message.textContent = '';
+      document.getElementById('student-form').hidden = true;
+      document.getElementById('toggle-student-form').setAttribute('aria-expanded', 'false');
+      renderDashboard();
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const role = document.querySelector('input[name="role"]:checked').value;
+      const loginMessage = document.getElementById('login-message');
+      const validAccounts = {
+        guru: { email: 'guru@kpm.id', password: 'guru12345', label: 'GURU' },
+        'wali-murid': { email: 'wali@kpm.id', password: 'wali12345', label: 'WALI MURID' }
+      };
+      const account = validAccounts[role];
+
+      if (email !== account.email || password !== account.password) {
+        loginMessage.textContent = 'Email atau password tidak sesuai dengan peran yang dipilih.';
+        return;
+      }
+
+      loginMessage.textContent = '';
+      currentUser = { email, role };
+      selectedDate = toDateKey(new Date());
+      selectedPeriod = 'day';
+      renderDashboard();
+      document.getElementById('login-page').hidden = true;
+      document.getElementById('home-page').hidden = false;
+      document.title = `${account.label} - KPM`;
+    }
+
+    function handleLogout() {
+      document.getElementById('home-page').hidden = true;
+      document.getElementById('teacher-dashboard').hidden = true;
+      document.getElementById('parent-dashboard').hidden = true;
+      document.getElementById('login-page').hidden = false;
+      const loginForm = document.getElementById('login-page').querySelector('form');
+      loginForm.reset();
+      document.getElementById('email').placeholder = 'email@guru.kpm.id';
+      document.getElementById('login-message').textContent = '';
+      currentUser = null;
+      document.title = 'Login - KPM';
+    }
+  </script>
+
+</body>
+</html>
